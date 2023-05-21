@@ -44,7 +44,7 @@ void Preferences_Class::Refresh_Wireless()
                 Communication.WiFi.Scan.Get_SSID(i, Temporary_SSID);
                 strlcat(Networks_List, Temporary_SSID, sizeof(Networks_List));
 
-                if (Temporary_SSID == Connected_SSID)
+                if ((Temporary_SSID == Connected_SSID) && (Connected_SSID != ""))
                     strlcat(Networks_List, " (Connected)", sizeof(Networks_List));
 
                 if (i != (Access_Points_Number - 1))
@@ -114,16 +114,20 @@ void Preferences_Class::Execute_Wireless_Instruction(const Instruction_Type &Ins
 
         Log_Verbose("Preferences", "Wireless : Connecting to %s with psw : %s", (const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID), (const char*)Wireless_WiFi_Password_Text_Area.Get_Text());
 
-        auto File = Drive.Open(Registry("WiFi"), true, false, false);
+        auto File = Drive.Open(Registry("WiFi"));
+
+        File.Seek(0);
 
         Log_Verbose("Preferences", "Wireless : File opened :");
 
         while (File.Available() > 0)
         {
-            log_printf("%c", File.Read());
+            char C[2] = {0, 0};
+            C[0] = File.Read();
+            log_printf("%s", C);
         }
 
-        // Communication.WiFi.Station.Connect(Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID), Wireless_WiFi_Password_Text_Area.Get_Text());
+        Communication.WiFi.Station.Connect((const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID), (const char*)Wireless_WiFi_Password_Text_Area.Get_Text());
     }
     else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Password_Text_Area)
     {

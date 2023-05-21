@@ -74,7 +74,6 @@ void Preferences_Class::Main_Task_Function()
     {
         if (this->Instruction_Available())
         {
-            Log_Verbose("Preferences", "Instruction available");
             this->Execute_Instruction(this->Get_Instruction());
         }
         else
