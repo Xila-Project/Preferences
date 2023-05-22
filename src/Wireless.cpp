@@ -160,6 +160,7 @@ void Preferences_Class::Draw_Wireless()
     {
         Label_Type Label;
         Label.Create(Grid, "WiFi station");
+        Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, WiFi_Section_Row, 1);
         Label.Clear_Pointer();
 
@@ -205,6 +206,7 @@ void Preferences_Class::Draw_Wireless()
 
         Label_Type Label;
         Label.Create(Grid, "Network");
+        Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Network_Section_Row, 1);
         Label.Clear_Pointer();
 

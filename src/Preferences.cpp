@@ -28,7 +28,7 @@ void Preferences_Class::Set_Interface()
     Window.Create(this);
     Window.Set_Title("Preferences");
 
-    Tabs.Create(Window.Get_Body(), Direction_Type::Bottom, 64);
+    Tabs.Create(Window.Get_Body(), Direction_Type::Bottom, 48);
     Tabs.Set_Size(Percentage(100), Percentage(100));
     Tabs.Set_Style_Background_Opacity(Opacity_Type::Opacity_0_Percent, 0);
     Tabs.Add_Event(this, Graphics_Types::Event_Code_Type::Value_Changed);
@@ -54,7 +54,7 @@ void Preferences_Class::Set_Interface()
     Draw_Hardware();
     Draw_Wireless();
     Draw_Users();
-    // Draw_System();
+    Draw_System();
 
     Log_Verbose("Preferences", "Draw done");
     
@@ -95,10 +95,8 @@ void Preferences_Class::Execute_Instruction(Instruction_Type Instruction)
     }
     else if (Instruction.Get_Sender() == &Graphics)
     {
-        Log_Trace();
         if (Instruction.Graphics.Get_Target() == Tabs)
         {
-            Log_Trace();
             if (Instruction.Graphics.Get_Code() == Graphics_Types::Event_Code_Type::Clicked)
             {
                 Log_Verbose("Tabs", "Tab clicked : %u", Tabs.Get_Tab_Active());

@@ -37,7 +37,7 @@ void Preferences_Class::Draw_Personal()
         {
             Label_Type Label;
             Label.Create(Grid, "Style");
-            Label.Set_Style_Text_Font(&lv_font_montserrat_24, 0);
+            Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
             Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Style_Section_Row, 1);
         }
 

@@ -124,6 +124,7 @@ void Preferences_Class::Draw_Hardware()
     {
         Label_Type Label;
         Label.Create(Grid, "Display");
+        Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Display_Section_Row, 1);
         Label.Clear_Pointer();
 
@@ -145,6 +146,7 @@ void Preferences_Class::Draw_Hardware()
     {
         Label_Type Label;
         Label.Create(Grid, "Sound");
+        Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Sound_Section_Row, 1);
         Label.Clear_Pointer();
 
@@ -162,6 +164,7 @@ void Preferences_Class::Draw_Hardware()
     {
         Label_Type Label;
         Label.Create(Grid, "Battery");
+        Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Battery_Section_Row, 1);
         Label.Clear_Pointer();
 
@@ -178,6 +181,7 @@ void Preferences_Class::Draw_Hardware()
     {
         Label_Type Label;
         Label.Create(Grid, "Drive");
+        Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Drive_Section_Row, 1);
         Label.Clear_Pointer();
 
@@ -190,6 +194,7 @@ void Preferences_Class::Draw_Hardware()
     {
         Label_Type Label;
         Label.Create(Grid, "Energy");
+        Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Energy_Section_Row, 1);
         Label.Clear_Pointer();
 

@@ -92,6 +92,7 @@ void Preferences_Class::Draw_Users()
     {
         Label_Type Title_Label;
         Title_Label.Create(Grid, "Your account");
+        Title_Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Title_Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Your_Account_Section_Row, 1);
 
         Users_Apply_Button.Create(Grid, "Apply", 0, 0, this);
@@ -127,6 +128,7 @@ void Preferences_Class::Draw_Users()
     {
         Label_Type Title_Label;
         Title_Label.Create(Grid, "Other accounts");
+        Title_Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Title_Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Other_Accounts_Section_Row, 1);
 
         Users_Roller.Create(Grid);
@@ -162,6 +164,7 @@ void Preferences_Class::Draw_Users()
     {
         Label_Type Title_Label;
         Title_Label.Create(Grid, "Add user");
+        Title_Label.Set_Style_Text_Font(&Graphics.Get_Font(24), 0);
         Title_Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Add_User_Section_Row, 1);
 
         Users_Add_User_Name_Text_Area.Create(Grid);
