@@ -12,7 +12,7 @@ void Preferences_Class::Refresh_Hardware()
 {
     Hardware_Display_Brightness_Slider.Set_Value(Display.Get_Brightness(), false);
     Hardware_Sound_Volume_Slider.Set_Value(Sound.Get_Volume(), false);
-    Hardware_Battery_Level_Label.Set_Text(Power.Get_Charge_Level() + " %");
+    Hardware_Battery_Level_Label.Set_Text(Power.Get_Battery_Charge_Level() + " %");
 
     switch (Drive.Get_Type())
     {
