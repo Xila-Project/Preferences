@@ -10,9 +10,11 @@
 
 void Preferences_Class::Refresh_Hardware()
 {
+    Log_Verbose("Preferences", "Refresh hardware");
+
     Hardware_Display_Brightness_Slider.Set_Value(Display.Get_Brightness(), false);
-    Hardware_Sound_Volume_Slider.Set_Value(Sound.Get_Volume(), false);
-    Hardware_Battery_Level_Label.Set_Text(Power.Get_Battery_Charge_Level() + " %");
+    Hardware_Sound_Volume_Slider.Set_Value(Sound.Get_Volume() * 100, false);
+    Hardware_Battery_Level_Label.Set_Text_Format("%u %", Power.Get_Battery_Charge_Level());
 
     switch (Drive.Get_Type())
     {
@@ -65,7 +67,9 @@ void Preferences_Class::Execute_Hardware_Instruction(const Instruction_Type &Ins
     }
     else if (Instruction.Graphics.Get_Target() == Hardware_Sound_Volume_Slider)
     {
-        Sound.Set_Volume(Hardware_Sound_Volume_Slider.Get_Value());
+        Log_Verbose("Pref", "Volume : %i", Hardware_Sound_Volume_Slider.Get_Value());
+        Log_Verbose("Pref", "Volume : %f", ((Real_Type)Hardware_Sound_Volume_Slider.Get_Value()) / 100);
+        Sound.Set_Volume(((Real_Type)Hardware_Sound_Volume_Slider.Get_Value()) / 100);
     }
     else if (Instruction.Graphics.Get_Target() == Hardware_Energy_Apply_Button)
     {
@@ -157,6 +161,7 @@ void Preferences_Class::Draw_Hardware()
         Hardware_Sound_Volume_Slider.Create(Grid);
         Hardware_Sound_Volume_Slider.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 2, 6, Grid_Alignment_Type::Center, Sound_Section_Row + 1, 1);
         Hardware_Sound_Volume_Slider.Set_Range(0, 100);
+        Hardware_Sound_Volume_Slider.Add_Event(this, Event_Code_Type::Value_Changed);
     }
 
     const uint8_t Battery_Section_Row = Sound_Section_Row + 2;

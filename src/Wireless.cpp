@@ -20,7 +20,7 @@ void Preferences_Class::Refresh_Wireless()
             Wireless_WiFi_Switch.Add_State(Graphics_Types::State_Type::Checked);
             Wireless_WiFi_Access_Point_Roller.Clear_State(Graphics_Types::State_Type::Disabled);
             Wireless_WiFi_Refresh_Button.Clear_State(Graphics_Types::State_Type::Disabled);
-            Wireless_WiFi_Informations_Button.Clear_State(Graphics_Types::State_Type::Disabled);
+            Wireless_WiFi_Forget_Button.Clear_State(Graphics_Types::State_Type::Disabled);
             Wireless_WiFi_Connect_Button.Clear_State(Graphics_Types::State_Type::Disabled);
             Wireless_WiFi_Password_Text_Area.Clear_State(Graphics_Types::State_Type::Disabled);
 
@@ -62,7 +62,7 @@ void Preferences_Class::Refresh_Wireless()
             Wireless_WiFi_Switch.Clear_State(Graphics_Types::State_Type::Checked);
             Wireless_WiFi_Access_Point_Roller.Add_State(Graphics_Types::State_Type::Disabled);
             Wireless_WiFi_Refresh_Button.Add_State(Graphics_Types::State_Type::Disabled);
-            Wireless_WiFi_Informations_Button.Add_State(Graphics_Types::State_Type::Disabled);
+            Wireless_WiFi_Forget_Button.Add_State(Graphics_Types::State_Type::Disabled);
             Wireless_WiFi_Connect_Button.Add_State(Graphics_Types::State_Type::Disabled);
             Wireless_WiFi_Password_Text_Area.Add_State(Graphics_Types::State_Type::Disabled);
             Wireless_WiFi_Access_Point_Roller.Set_Options("", Graphics_Types::Roller_Mode_Type::Normal);
@@ -104,9 +104,11 @@ void Preferences_Class::Execute_Wireless_Instruction(const Instruction_Type &Ins
     {
         Refresh_Wireless();
     }
-    else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Informations_Button)
+    else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Forget_Button)
     {
-        // TODO
+         Static_String_Type<32> SSID;
+
+        Communication.WiFi.Station.Remove((const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID));
     }
     else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Connect_Button)
     {
@@ -180,8 +182,8 @@ void Preferences_Class::Draw_Wireless()
 
         // - Informations button
 
-        Wireless_WiFi_Informations_Button.Create(Grid, "Informations", 0, 0, this);
-        Wireless_WiFi_Informations_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 6, 2, Grid_Alignment_Type::Stretch, WiFi_Section_Row + 2, 1);
+        Wireless_WiFi_Forget_Button.Create(Grid, "Forget", 0, 0, this);
+        Wireless_WiFi_Forget_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 6, 2, Grid_Alignment_Type::Stretch, WiFi_Section_Row + 2, 1);
 
         // - Connect button
 
@@ -250,6 +252,4 @@ void Preferences_Class::Draw_Wireless()
         Wireless_Network_DNS_2_Text_Area.Set_Placeholder_Text("DNS 2");
         Wireless_Network_DNS_2_Text_Area.Set_One_Line(true);
     }
-
-    Refresh_Wireless();
 }

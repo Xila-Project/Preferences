@@ -85,7 +85,7 @@ private:
 
     Graphics_Types::Switch_Type Wireless_WiFi_Switch;
     Graphics_Types::Button_Type Wireless_WiFi_Refresh_Button;
-    Graphics_Types::Button_Type Wireless_WiFi_Informations_Button;
+    Graphics_Types::Button_Type Wireless_WiFi_Forget_Button;
     Graphics_Types::Button_Type Wireless_WiFi_Connect_Button;
     Graphics_Types::Roller_Type Wireless_WiFi_Access_Point_Roller;
     Graphics_Types::Text_Area_Type Wireless_WiFi_Password_Text_Area;

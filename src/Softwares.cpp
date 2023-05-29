@@ -76,6 +76,4 @@ void Preferences_Class::Draw_Softwares()
         Softwares_Delete_Button.Create(Grid, "Delete", 0, 0, this);
         Softwares_Delete_Button.Set_Grid_Cell(Grid_Alignment_Type::Center, 6, 2, Grid_Alignment_Type::Center, Software_Section_Row + 1, 1);
     }
-
-    Refresh_Softwares();
 }

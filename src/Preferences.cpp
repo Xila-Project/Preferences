@@ -61,7 +61,6 @@ void Preferences_Class::Set_Interface()
     Keyboard.Create(Window.Get_Body());
     Keyboard.Add_Flag(Flag_Type::Hidden);
     Keyboard.Add_Flag(Flag_Type::Floating);
-    
 
     Log_Verbose("Preferences", "End");
 }
@@ -95,27 +94,26 @@ void Preferences_Class::Execute_Instruction(Instruction_Type Instruction)
     }
     else if (Instruction.Get_Sender() == &Graphics)
     {
-        if (Instruction.Graphics.Get_Target() == Tabs)
+        if (Instruction.Graphics.Get_Current_Target() == Tabs)
         {
-            if (Instruction.Graphics.Get_Code() == Graphics_Types::Event_Code_Type::Clicked)
+            if (Instruction.Graphics.Get_Code() == Graphics_Types::Event_Code_Type::Value_Changed)
             {
-                Log_Verbose("Tabs", "Tab clicked : %u", Tabs.Get_Tab_Active());
                 switch (Tabs.Get_Tab_Active())
                 {
                 case 0:
-                    // Refresh_Personal();
+                    Refresh_Personal();
                     break;
                 case 1:
-                    // Refresh_Softwares();
+                    Refresh_Softwares();
                     break;
                 case 2:
-                    // Refresh_Hardware();
+                    Refresh_Hardware();
                     break;
                 case 3:
-                    // Refresh_Wireless();
+                    Refresh_Wireless();
                     break;
                 case 4:
-                    // Refresh_Users();
+                    Refresh_Users();
                     break;
                 case 5:
                     // Refresh_System();
