@@ -20,7 +20,7 @@ void Preferences_Class::Refresh_System()
 
     Temporary_String = "";
 
-    for (uint8_t i = -12; i <= 12; i++)
+    for (int8_t i = -12; i <= 12; i++)
     {
 
         if ((i == -4) || (i == -3) || (i == 3) || (i == 4) || (i == 5) || (i == 6) || (i == 9))
@@ -83,29 +83,21 @@ void Preferences_Class::Draw_System()
 {
     using namespace Graphics_Types;
 
-    Log_Verbose("System", "Draw 1");
-
     System_Tab.Set_Flex_Flow(Flex_Flow_Type::Row);
     System_Tab.Set_Style_Pad_All(0, 0);
     System_Tab.Clear_Flag(Flag_Type::Scroll_Elastic);
-    System_Tab.Clear_Flag(Flag_Type::Scroll_Momentum);
-
-    Log_Verbose("System", "Draw 2");
+    System_Tab.Clear_Flag(Flag_Type::Scroll_Momentum);  
 
     // - Grid layout
 
     System_Tab.Set_Grid_Descriptor_Array(Column_Descriptor, Row_Descriptor);
     System_Tab.Set_Style_Pad_All(10, 0);
 
-    Log_Verbose("System", "Draw 3");
-
     // - - Device section
 
     const uint8_t Device_Section_Row = 0;
 
     {
-        Log_Verbose("System", "Draw 4");
-
         // - - - Device title label
         {
             Label_Type Label;
@@ -114,27 +106,21 @@ void Preferences_Class::Draw_System()
             Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Device_Section_Row, 1);
         }
 
-        Log_Verbose("System", "Draw 5");
-
         // - - - Apply button
         System_Device_Apply_Button.Create(System_Tab, "Apply", 0, 0, this);
         System_Device_Apply_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 6, 2, Grid_Alignment_Type::Stretch, Device_Section_Row, 1);
-
-        Log_Verbose("System", "Draw 6");
 
         // - - - Device name text area
         System_Device_Name_Text_Area.Create(System_Tab);
         System_Device_Name_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 1, 6, Grid_Alignment_Type::Stretch, Device_Section_Row + 1, 1);
         System_Device_Name_Text_Area.Set_Placeholder_Text("Device name");
         System_Device_Name_Text_Area.Set_One_Line(true);
-
-        Log_Verbose("System", "Draw 7");
+        System_Device_Name_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        System_Device_Name_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         // - - - System update button
         System_Update_Button.Create(System_Tab, "Update system", 0, 0, this);
         System_Update_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 4, Grid_Alignment_Type::Stretch, Device_Section_Row + 2, 1);
-
-        Log_Trace();
 
         // - - - System reboot to loader button
         System_Reboot_Loader_Button.Create(System_Tab, "Reboot to loader", 0, 0, this);
@@ -147,8 +133,6 @@ void Preferences_Class::Draw_System()
     const uint8_t Time_Section_Row = Device_Section_Row + 3;
 
     {
-        Log_Trace();
-
         // - - - Time title label
 
         Label_Type Label;
@@ -157,14 +141,10 @@ void Preferences_Class::Draw_System()
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Time_Section_Row, 1);
         Label.Clear_Pointer();
 
-        Log_Trace();
-
         // - - - Apply time button
 
         System_Time_Apply_Button.Create(System_Tab, "Apply", 0, 0, this);
         System_Time_Apply_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 6, 2, Grid_Alignment_Type::Stretch, Time_Section_Row, 1);
-
-        Log_Trace();
 
         // - - - NTP server text area
 
@@ -172,66 +152,61 @@ void Preferences_Class::Draw_System()
         System_Time_NTP_Server_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 1, 6, Grid_Alignment_Type::Stretch, Time_Section_Row + 1, 1);
         System_Time_NTP_Server_Text_Area.Set_Placeholder_Text("N.T.P. server");
         System_Time_NTP_Server_Text_Area.Set_One_Line(true);
+        System_Time_NTP_Server_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        System_Time_NTP_Server_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         // - - - UTC offset roller
 
-        Log_Trace();
+        Label.Create(System_Tab, "UTC offset :");
+        Label.Set_Grid_Cell(Grid_Alignment_Type::End, 0, 3, Grid_Alignment_Type::Center, Time_Section_Row + 2, 2);
 
         System_Time_Zone_Roller.Create(System_Tab);
-        System_Time_Zone_Roller.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 2, 4, Grid_Alignment_Type::Stretch, Time_Section_Row + 2, 2);
+        System_Time_Zone_Roller.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 3, 3, Grid_Alignment_Type::Stretch, Time_Section_Row + 2, 2);
         Static_String_Type<512> Options;
-        Static_String_Type<12> Option;
+        char Option[13];
 
-        for (uint8_t i = -12; i <= 12; i++)
+        for (int8_t i = -12; i <= 12; i++)
         {
-            Option.Copy_Format("UTC %s%02u:00\n", i < 0 ? "-" : "+", i < 0 ? -i : i);
+            snprintf(Option, 13, "%s%02u:00\n", (i < 0 ? "-" : "+"), (i < 0 ? -i : i));
             Options += Option;
 
             if ((i == -4) || (i == -3) || (i == 3) || (i == 4) || (i == 5) || (i == 6) || (i == 9))
             {
-                Options.Copy_Format("UTC %s%02u:30\n", i < 0 ? "-" : "+", i < 0 ? -i : i);
+                snprintf(Option, 13, "%s%02u:30\n", (i < 0 ? "-" : "+"), (i < 0 ? -i : i));
                 Options += Option;
             }
         }
+        Options.Remove(Options.Get_Length() - 1, 1);
         System_Time_Zone_Roller.Set_Options(Options, Roller_Mode_Type::Normal);
         System_Time_Zone_Roller.Set_Visible_Row_Count(3);
 
-        Log_Trace();
-
-        // - - - UTC offset label
+     
+        // - - - Daylight offset label
 
         Label.Create(System_Tab, "Daylight offset :");
-        Label.Set_Grid_Cell(Grid_Alignment_Type::End, 0, 3, Grid_Alignment_Type::Stretch, Time_Section_Row + 3, 1);
+        Label.Set_Grid_Cell(Grid_Alignment_Type::End, 0, 3, Grid_Alignment_Type::Center, Time_Section_Row + 4, 1);
         Label.Clear_Pointer();
-
-        Log_Trace();
 
         // - - - Minus button
 
         System_Time_Minus_Button.Create(System_Tab, LV_SYMBOL_MINUS, 0, 0, this, Event_Code_Type::All);
-        System_Time_Minus_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 3, 1, Grid_Alignment_Type::Stretch, Time_Section_Row + 3, 1);
-
-        Log_Trace();
+        System_Time_Minus_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 3, 1, Grid_Alignment_Type::Stretch, Time_Section_Row + 4, 1);
 
         // - - - UTC offset spinbox
-
         System_Time_Daylight_Offset_Spinbox.Create(System_Tab);
-        System_Time_Daylight_Offset_Spinbox.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 3, 1, Grid_Alignment_Type::Stretch, Time_Section_Row + 3, 1);
+        System_Time_Daylight_Offset_Spinbox.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 4, 3, Grid_Alignment_Type::Stretch, Time_Section_Row + 4, 1);
         System_Time_Daylight_Offset_Spinbox.Set_Digit_Format(4, 0);
 
-        Log_Trace();
 
         // - - - Plus button
 
         System_Time_Plus_Button.Create(System_Tab, LV_SYMBOL_PLUS, 0, 0, this, Event_Code_Type::All);
-        System_Time_Plus_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 3, 1, Grid_Alignment_Type::Stretch, Time_Section_Row + 3, 1);
+        System_Time_Plus_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 7, 1, Grid_Alignment_Type::Stretch, Time_Section_Row + 4, 1);
     }
-
-    Log_Trace();
 
     // - - About section
 
-    const uint8_t About_Section_Row = Time_Section_Row + 4;
+    const uint8_t About_Section_Row = Time_Section_Row + 5;
 
     {
         // - - - About title label
@@ -242,25 +217,22 @@ void Preferences_Class::Draw_System()
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, About_Section_Row, 1);
         Label.Clear_Pointer();
 
-        Log_Trace();
-
+      
         // - - - Author label
 
         Label.Create(System_Tab, "Author : Alix ANNERAUD");
-        Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, About_Section_Row + 1, 1);
+        Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 4, Grid_Alignment_Type::Center, About_Section_Row + 1, 1);
         Label.Clear_Pointer();
-
-        Log_Trace();
 
         // - - - About version
 
         Label.Create(System_Tab, "Version : " Xila_Version_String);
-        Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, About_Section_Row + 2, 1);
+        Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 4, Grid_Alignment_Type::Center, About_Section_Row + 2, 1);
         Label.Clear_Pointer();
 
         QRCode_Type QR_Code;
         QR_Code.Create(System_Tab, "https://xila.dev", sizeof("https://xila.dev"), 128);
-        QR_Code.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, About_Section_Row + 3, 2);
+        QR_Code.Set_Grid_Cell(Grid_Alignment_Type::Center, 4, 4, Grid_Alignment_Type::Center, About_Section_Row + 1, 2);
 
     }
 }

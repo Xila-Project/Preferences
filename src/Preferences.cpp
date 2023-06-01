@@ -17,13 +17,13 @@ Preferences_Class::Preferences_Class(const Accounts_Types::User_Type *Owner_User
 Preferences_Class::~Preferences_Class()
 {
     Window.Delete();
+
+    Communication.WiFi.Scan.Delete();
 }
 
 void Preferences_Class::Set_Interface()
 {
     using namespace Graphics_Types;
-
-    Log_Verbose("Preferences", "Start");
 
     Window.Create(this);
     Window.Set_Title("Preferences");
@@ -44,25 +44,21 @@ void Preferences_Class::Set_Interface()
 
     Personal_Tab = Tabs.Add_Tab("Personal");
     Softwares_Tab = Tabs.Add_Tab("Softwares");
+    Hardware_Tab = Tabs.Add_Tab("Hardware");
     Network_Tab = Tabs.Add_Tab("Wireless");
     Users_Tab = Tabs.Add_Tab("Users");
-    Hardware_Tab = Tabs.Add_Tab("Hardware");
     System_Tab = Tabs.Add_Tab("System");
 
     Draw_Personal();
     Draw_Softwares();
-    Draw_Hardware();
-    Draw_Wireless();
     Draw_Users();
+    Draw_Wireless();
+    Draw_Hardware();
     Draw_System();
-
-    Log_Verbose("Preferences", "Draw done");
     
     Keyboard.Create(Window.Get_Body());
     Keyboard.Add_Flag(Flag_Type::Hidden);
     Keyboard.Add_Flag(Flag_Type::Floating);
-
-    Log_Verbose("Preferences", "End");
 }
 
 void Preferences_Class::Main_Task_Function()
@@ -116,11 +112,21 @@ void Preferences_Class::Execute_Instruction(Instruction_Type Instruction)
                     Refresh_Users();
                     break;
                 case 5:
-                    // Refresh_System();
+                    Refresh_System();
                     break;
                 }
                 return;
             }
+        }
+        else if (Instruction.Graphics.Get_Code() == Graphics_Types::Event_Code_Type::Focused)
+        {
+            Graphics_Types::Text_Area_Type Text_Area = Instruction.Graphics.Get_Current_Target();
+            if (Text_Area.Is_Valid())
+                Keyboard.Set_Text_Area(Text_Area);
+        }
+        else if (Instruction.Graphics.Get_Code() == Graphics_Types::Event_Code_Type::Defocused)
+        {
+            Keyboard.Remove_Text_Area();
         }
         else
         {
@@ -134,13 +140,13 @@ void Preferences_Class::Execute_Instruction(Instruction_Type Instruction)
                 Execute_Softwares_Instruction(Instruction);
                 break;
             case 2:
-                Execute_Wireless_Instruction(Instruction);
+                Execute_Hardware_Instruction(Instruction);
                 break;
             case 3:
-                Execute_Users_Instruction(Instruction);
+                Execute_Wireless_Instruction(Instruction);
                 break;
             case 4:
-                Execute_Hardware_Instruction(Instruction);
+                Execute_Users_Instruction(Instruction);
                 break;
             case 5:
                 Execute_System_Instruction(Instruction);

@@ -10,28 +10,26 @@
 
 void Preferences_Class::Refresh_Hardware()
 {
-    Log_Verbose("Preferences", "Refresh hardware");
-
     Hardware_Display_Brightness_Slider.Set_Value(Display.Get_Brightness(), false);
     Hardware_Sound_Volume_Slider.Set_Value(Sound.Get_Volume() * 100, false);
-    Hardware_Battery_Level_Label.Set_Text_Format("%u %", Power.Get_Battery_Charge_Level());
+    Hardware_Battery_Level_Label.Set_Text_Format("%u %", (uint32_t)Power.Get_Battery_Charge_Level());
 
     switch (Drive.Get_Type())
     {
     case Drive_Types::Drive_Type_Type::None:
-        Hardware_Drive_Informations_Label.Set_Text_Format("Type : None - Size : %u", Drive.Get_Size());
+        Hardware_Drive_Informations_Label.Set_Text_Format("Type : None - Size : %u MB", Drive.Get_Size() / (1024 * 1024));
         break;
     case Drive_Types::Drive_Type_Type::MMC:
-        Hardware_Drive_Informations_Label.Set_Text_Format("Type : MMC - Size : %u", Drive.Get_Size());
+        Hardware_Drive_Informations_Label.Set_Text_Format("Type : MMC - Size : %u MB", Drive.Get_Size() / (1024 * 1024));
         break;
     case Drive_Types::Drive_Type_Type::SD_SC:
-        Hardware_Drive_Informations_Label.Set_Text_Format("Type : SD SC - Size : %u", Drive.Get_Size());
+        Hardware_Drive_Informations_Label.Set_Text_Format("Type : SD SC - Size : %u MB", Drive.Get_Size() / (1024 * 1024));
         break;
     case Drive_Types::Drive_Type_Type::SD_HC:
-        Hardware_Drive_Informations_Label.Set_Text_Format("Type : SD HC - Size : %u", Drive.Get_Size());
+        Hardware_Drive_Informations_Label.Set_Text_Format("Type : SD HC - Size : %u MB", Drive.Get_Size() / (1024 * 1024));
         break;
     default:
-        Hardware_Drive_Informations_Label.Set_Text_Format("Type : Unknown - Size : %u", Drive.Get_Size());
+        Hardware_Drive_Informations_Label.Set_Text_Format("Type : Unknown - Size : %u MB", Drive.Get_Size() / (1024 * 1024));
         break;
     }
 
@@ -67,8 +65,6 @@ void Preferences_Class::Execute_Hardware_Instruction(const Instruction_Type &Ins
     }
     else if (Instruction.Graphics.Get_Target() == Hardware_Sound_Volume_Slider)
     {
-        Log_Verbose("Pref", "Volume : %i", Hardware_Sound_Volume_Slider.Get_Value());
-        Log_Verbose("Pref", "Volume : %f", ((Real_Type)Hardware_Sound_Volume_Slider.Get_Value()) / 100);
         Sound.Set_Volume(((Real_Type)Hardware_Sound_Volume_Slider.Get_Value()) / 100);
     }
     else if (Instruction.Graphics.Get_Target() == Hardware_Energy_Apply_Button)

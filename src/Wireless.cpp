@@ -29,8 +29,6 @@ void Preferences_Class::Refresh_Wireless()
             if (Communication.WiFi.Station.Get_Status() == Status_Type::Connected)
                 Communication.WiFi.Station.Get_SSID(Connected_SSID);
 
-            Log_Verbose("Preferences", "Wireless : Connected to %s", (const char*)Connected_SSID);
-
             uint16_t Access_Points_Number = Communication.WiFi.Scan.Start(false, true);
 
             char Networks_List[33 * (Access_Points_Number) + 12];
@@ -51,10 +49,7 @@ void Preferences_Class::Refresh_Wireless()
                     strlcat(Networks_List, "\n", sizeof(Networks_List));
             }
 
-            Log_Verbose("Preferences", "Wireless : %s", (const char*) Networks_List);
-
             Wireless_WiFi_Access_Point_Roller.Set_Options(Networks_List, Graphics_Types::Roller_Mode_Type::Normal);
-
             Communication.WiFi.Scan.Delete();
         }
         else
@@ -91,13 +86,10 @@ void Preferences_Class::Execute_Wireless_Instruction(const Instruction_Type &Ins
     if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Switch)
     {
         if (Wireless_WiFi_Switch.Has_State(Graphics_Types::State_Type::Checked))
-        {
             Communication.WiFi.Station.Turn_On();
-        }
         else
-        {
             Communication.WiFi.Turn_Off();
-        }
+            Communication.WiFi.Scan.Delete();
         Refresh_Wireless();
     }
     else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Refresh_Button)
@@ -114,29 +106,10 @@ void Preferences_Class::Execute_Wireless_Instruction(const Instruction_Type &Ins
     {
         Static_String_Type<32> SSID;
 
-        Log_Verbose("Preferences", "Wireless : Connecting to %s with psw : %s", (const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID), (const char*)Wireless_WiFi_Password_Text_Area.Get_Text());
-
-        auto File = Drive.Open(Registry("WiFi"));
-
-        File.Seek(0);
-
-        Log_Verbose("Preferences", "Wireless : File opened :");
-
-        while (File.Available() > 0)
-        {
-            char C[2] = {0, 0};
-            C[0] = File.Read();
-            log_printf("%s", C);
-        }
+        if (strcmp(Wireless_WiFi_Password_Text_Area.Get_Text(), "") != 0)
+            Communication.WiFi.Station.Remove((const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID));
 
         Communication.WiFi.Station.Connect((const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID), (const char*)Wireless_WiFi_Password_Text_Area.Get_Text());
-    }
-    else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Password_Text_Area)
-    {
-        if (Instruction.Graphics.Get_Code() == Graphics_Types::Event_Code_Type::Focused) 
-            Keyboard.Set_Text_Area(Wireless_WiFi_Password_Text_Area);
-        else if (Instruction.Graphics.Get_Code() == Graphics_Types::Event_Code_Type::Defocused)
-            Keyboard.Remove_Text_Area();
     }
 }
 
@@ -222,34 +195,55 @@ void Preferences_Class::Draw_Wireless()
         Wireless_Network_Local_IP_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 6, Grid_Alignment_Type::Stretch, Network_Section_Row + 1, 1);
         Wireless_Network_Local_IP_Text_Area.Set_Placeholder_Text("Local IP");
         Wireless_Network_Local_IP_Text_Area.Set_One_Line(true);
+        Wireless_Network_Local_IP_Text_Area.Set_Maximum_Length(15);
+        Wireless_Network_Local_IP_Text_Area.Set_Accepted_Characters("0123456789.");
+        Wireless_Network_Local_IP_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Wireless_Network_Local_IP_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         // - DHCP checkbox
         Wireless_Network_DHCP_Checkbox.Create(Grid);
         Wireless_Network_DHCP_Checkbox.Set_Grid_Cell(Grid_Alignment_Type::Center, 6, 2, Grid_Alignment_Type::Center, Network_Section_Row + 1, 1);
         Wireless_Network_DHCP_Checkbox.Set_Text("DHCP");
+        
 
         // - Subnet mask
         Wireless_Network_Subnet_Mask_Text_Area.Create(Grid);
         Wireless_Network_Subnet_Mask_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 6, Grid_Alignment_Type::Stretch, Network_Section_Row + 2, 1);
         Wireless_Network_Subnet_Mask_Text_Area.Set_Placeholder_Text("Subnet mask");
         Wireless_Network_Subnet_Mask_Text_Area.Set_One_Line(true);
+        Wireless_Network_Subnet_Mask_Text_Area.Set_Maximum_Length(15);
+        Wireless_Network_Subnet_Mask_Text_Area.Set_Accepted_Characters("0123456789.");
+        Wireless_Network_Subnet_Mask_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Wireless_Network_Subnet_Mask_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         // - Gateway
         Wireless_Network_Gateway_IP_Text_Area.Create(Grid);
         Wireless_Network_Gateway_IP_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 6, Grid_Alignment_Type::Stretch, Network_Section_Row + 3, 1);
         Wireless_Network_Gateway_IP_Text_Area.Set_Placeholder_Text("Gateway");
         Wireless_Network_Gateway_IP_Text_Area.Set_One_Line(true);
+        Wireless_Network_Gateway_IP_Text_Area.Set_Maximum_Length(15);
+        Wireless_Network_Gateway_IP_Text_Area.Set_Accepted_Characters("0123456789.");
+        Wireless_Network_Gateway_IP_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Wireless_Network_Gateway_IP_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         // - DNS 1
         Wireless_Network_DNS_1_Text_Area.Create(Grid);
         Wireless_Network_DNS_1_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 6, Grid_Alignment_Type::Stretch, Network_Section_Row + 4, 1);
         Wireless_Network_DNS_1_Text_Area.Set_Placeholder_Text("DNS 1");
         Wireless_Network_DNS_1_Text_Area.Set_One_Line(true);
+        Wireless_Network_DNS_1_Text_Area.Set_Maximum_Length(15);
+        Wireless_Network_DNS_1_Text_Area.Set_Accepted_Characters("0123456789.");
+        Wireless_Network_DNS_1_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Wireless_Network_DNS_1_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         // - DNS 2
         Wireless_Network_DNS_2_Text_Area.Create(Grid);
         Wireless_Network_DNS_2_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 6, Grid_Alignment_Type::Stretch, Network_Section_Row + 5, 1);
         Wireless_Network_DNS_2_Text_Area.Set_Placeholder_Text("DNS 2");
         Wireless_Network_DNS_2_Text_Area.Set_One_Line(true);
+        Wireless_Network_DNS_2_Text_Area.Set_Maximum_Length(15);
+        Wireless_Network_DNS_2_Text_Area.Set_Accepted_Characters("0123456789.");
+        Wireless_Network_DNS_2_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Wireless_Network_DNS_2_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
     }
 }

@@ -102,20 +102,28 @@ void Preferences_Class::Draw_Users()
         Users_Your_Account_Password_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 1, 6, Grid_Alignment_Type::Stretch, Your_Account_Section_Row + 1, 1);
         Users_Your_Account_Password_Text_Area.Set_Placeholder_Text("Password");
         Users_Your_Account_Password_Text_Area.Set_Password_Mode(true);
+        Users_Your_Account_Password_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Users_Your_Account_Password_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         Users_Your_Account_New_Name_Text_Area.Create(Grid);
         Users_Your_Account_New_Name_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 1, 6, Grid_Alignment_Type::Stretch, Your_Account_Section_Row + 2, 1);
         Users_Your_Account_New_Name_Text_Area.Set_Placeholder_Text("New name");
+        Users_Your_Account_New_Name_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Users_Your_Account_New_Name_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         Users_Your_Account_New_Password_Text_Area.Create(Grid);
         Users_Your_Account_New_Password_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 1, 6, Grid_Alignment_Type::Stretch, Your_Account_Section_Row + 3, 1);
         Users_Your_Account_New_Password_Text_Area.Set_Placeholder_Text("New password");
         Users_Your_Account_New_Password_Text_Area.Set_Password_Mode(true);
+        Users_Your_Account_New_Password_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Users_Your_Account_New_Password_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         Users_Your_Account_New_Password_Confirmation_Text_Area.Create(Grid);
         Users_Your_Account_New_Password_Confirmation_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 1, 6, Grid_Alignment_Type::Stretch, Your_Account_Section_Row + 4, 1);
         Users_Your_Account_New_Password_Confirmation_Text_Area.Set_Placeholder_Text("New password confirmation");
         Users_Your_Account_New_Password_Confirmation_Text_Area.Set_Password_Mode(true);
+        Users_Your_Account_New_Password_Confirmation_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Users_Your_Account_New_Password_Confirmation_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         Users_Delete_Your_Account_Button.Create(Grid, "Delete", 0, 0, this);
         Users_Delete_Your_Account_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 5, 2, Grid_Alignment_Type::Stretch, Your_Account_Section_Row + 5, 1);
@@ -170,11 +178,15 @@ void Preferences_Class::Draw_Users()
         Users_Add_User_Name_Text_Area.Create(Grid);
         Users_Add_User_Name_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 6, Grid_Alignment_Type::Stretch, Add_User_Section_Row + 1, 1);
         Users_Add_User_Name_Text_Area.Set_Placeholder_Text("Name");
+        Users_Add_User_Name_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Users_Add_User_Name_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         Users_Add_User_Password_Text_Area.Create(Grid);
         Users_Add_User_Password_Text_Area.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 0, 6, Grid_Alignment_Type::Stretch, Add_User_Section_Row + 2, 1);
         Users_Add_User_Password_Text_Area.Set_Placeholder_Text("Password");
         Users_Add_User_Password_Text_Area.Set_Password_Mode(true);
+        Users_Add_User_Password_Text_Area.Add_Event(this, Event_Code_Type::Focused);
+        Users_Add_User_Password_Text_Area.Add_Event(this, Event_Code_Type::Defocused);
 
         Users_Add_User_Button.Create(Grid, "Add", 0, 0, this);
         Users_Add_User_Button.Set_Grid_Cell(Grid_Alignment_Type::Stretch, 5, 2, Grid_Alignment_Type::Stretch, Add_User_Section_Row + 1, 1);
