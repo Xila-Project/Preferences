@@ -67,49 +67,74 @@ void Preferences_Class::Refresh_Wireless()
     // - Network section
 
     {
-        //        Static_String_Type<24> IP_Address;
-        //        Communication.WiFi.Station.Get_IP_Address().To(IP_Address);
-        //        Wireless_Network_Local_IP_Text_Area.Set_Text(IP_Address);
-        //        Communication.WiFi.Station.Get_Subnet_Mask().To(IP_Address);
-        //        Wireless_Network_Subnet_Mask_Text_Area.Set_Text(IP_Address);
-        //        Communication.WiFi.Station.Get_Gateway_IP_Address().To(IP_Address);
-        //        Wireless_Network_Gateway_IP_Text_Area.Set_Text(IP_Address);
-        //        Communication.WiFi.Station.Get_DNS_IP_Address(0).To(IP_Address);
-        //        Wireless_Network_DNS_1_Text_Area.Set_Text(IP_Address);
-        //        Communication.WiFi.Station.Get_DNS_IP_Address(1).To(IP_Address);
-        //        Wireless_Network_DNS_2_Text_Area.Set_Text(IP_Address);
+        if (Wireless_Network_DHCP_Checkbox.Has_State(Graphics_Types::State_Type::Checked))
+        {
+            Wireless_Network_Local_IP_Text_Area.Add_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_Subnet_Mask_Text_Area.Add_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_Gateway_IP_Text_Area.Add_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_DNS_1_Text_Area.Add_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_DNS_2_Text_Area.Add_State(Graphics_Types::State_Type::Disabled);
+        }
+        else
+        {
+            Wireless_Network_Local_IP_Text_Area.Clear_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_Subnet_Mask_Text_Area.Clear_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_Gateway_IP_Text_Area.Clear_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_DNS_1_Text_Area.Clear_State(Graphics_Types::State_Type::Disabled);
+            Wireless_Network_DNS_2_Text_Area.Clear_State(Graphics_Types::State_Type::Disabled);
+        }
+
+        Static_String_Type<24> IP_Address_String;
+
+        Communication.WiFi.Station.Get_IP_Address().To(IP_Address_String);
+        Wireless_Network_Local_IP_Text_Area.Set_Text(IP_Address_String);
+        Communication.WiFi.Station.Get_Subnet_Mask().To(IP_Address_String);
+        Wireless_Network_Subnet_Mask_Text_Area.Set_Text(IP_Address_String);
+        Communication.WiFi.Station.Get_Gateway_IP_Address().To(IP_Address_String);
+        Wireless_Network_Gateway_IP_Text_Area.Set_Text(IP_Address_String);
+        Communication.WiFi.Station.Get_DNS_IP_Address(0).To(IP_Address_String);
+        Wireless_Network_DNS_1_Text_Area.Set_Text(IP_Address_String);
+        Communication.WiFi.Station.Get_DNS_IP_Address(1).To(IP_Address_String);
+        Wireless_Network_DNS_2_Text_Area.Set_Text(IP_Address_String);
     }
 }
 
 void Preferences_Class::Execute_Wireless_Instruction(const Instruction_Type &Instruction)
 {
-    if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Switch)
+    Graphics_Types::Object_Type Current_Target = Instruction.Graphics.Get_Current_Target();
+    if (Current_Target == Wireless_WiFi_Switch)
     {
         if (Wireless_WiFi_Switch.Has_State(Graphics_Types::State_Type::Checked))
             Communication.WiFi.Station.Turn_On();
         else
             Communication.WiFi.Turn_Off();
-            Communication.WiFi.Scan.Delete();
+        Communication.WiFi.Scan.Delete();
         Refresh_Wireless();
     }
-    else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Refresh_Button)
+    else if (Current_Target == Wireless_WiFi_Refresh_Button)
     {
         Refresh_Wireless();
     }
-    else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Forget_Button)
+    else if (Current_Target == Wireless_WiFi_Forget_Button)
     {
-         Static_String_Type<32> SSID;
+        Static_String_Type<32> SSID;
 
-        Communication.WiFi.Station.Remove((const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID));
+        Communication.WiFi.Station.Remove((const char *)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID));
     }
-    else if (Instruction.Graphics.Get_Target() == Wireless_WiFi_Connect_Button)
+    else if (Current_Target == Wireless_WiFi_Connect_Button)
     {
         Static_String_Type<32> SSID;
 
         if (strcmp(Wireless_WiFi_Password_Text_Area.Get_Text(), "") != 0)
-            Communication.WiFi.Station.Remove((const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID));
+            Communication.WiFi.Station.Remove((const char *)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID));
 
-        Communication.WiFi.Station.Connect((const char*)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID), (const char*)Wireless_WiFi_Password_Text_Area.Get_Text());
+        Main_Task.Delay(10);
+
+        Communication.WiFi.Station.Connect((const char *)Wireless_WiFi_Access_Point_Roller.Get_Selected_String(SSID), (const char *)Wireless_WiFi_Password_Text_Area.Get_Text());
+    }
+    else if (Current_Target == Wireless_Network_DHCP_Checkbox)
+    {
+        Refresh_Wireless();
     }
 }
 
@@ -204,7 +229,7 @@ void Preferences_Class::Draw_Wireless()
         Wireless_Network_DHCP_Checkbox.Create(Grid);
         Wireless_Network_DHCP_Checkbox.Set_Grid_Cell(Grid_Alignment_Type::Center, 6, 2, Grid_Alignment_Type::Center, Network_Section_Row + 1, 1);
         Wireless_Network_DHCP_Checkbox.Set_Text("DHCP");
-        
+        Wireless_Network_DHCP_Checkbox.Add_Event(this, Event_Code_Type::Value_Changed);
 
         // - Subnet mask
         Wireless_Network_Subnet_Mask_Text_Area.Create(Grid);

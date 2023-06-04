@@ -12,7 +12,7 @@ void Preferences_Class::Refresh_Hardware()
 {
     Hardware_Display_Brightness_Slider.Set_Value(Display.Get_Brightness(), false);
     Hardware_Sound_Volume_Slider.Set_Value(Sound.Get_Volume() * 100, false);
-    Hardware_Battery_Level_Label.Set_Text_Format("%u %", (uint32_t)Power.Get_Battery_Charge_Level());
+    Hardware_Battery_Level_Label.Set_Text_Format("Level : %u %% (%.2f V)", (uint32_t)Power.Get_Battery_Charge_Level(), ((float)Power.Get_Battery_Voltage() / 1000));
 
     switch (Drive.Get_Type())
     {
@@ -169,12 +169,8 @@ void Preferences_Class::Draw_Hardware()
         Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Battery_Section_Row, 1);
         Label.Clear_Pointer();
 
-        Label.Create(Grid, "Level :");
-        Label.Set_Grid_Cell(Grid_Alignment_Type::End, 0, 2, Grid_Alignment_Type::Center, Battery_Section_Row + 1, 1);
-        Label.Clear_Pointer();
-
         Hardware_Battery_Level_Label.Create(Grid);
-        Hardware_Battery_Level_Label.Set_Grid_Cell(Grid_Alignment_Type::Start, 2, 6, Grid_Alignment_Type::Center, Battery_Section_Row + 1, 1);
+        Hardware_Battery_Level_Label.Set_Grid_Cell(Grid_Alignment_Type::Center, 0, 8, Grid_Alignment_Type::Center, Battery_Section_Row + 1, 1);
     }
 
     const uint8_t Drive_Section_Row = Battery_Section_Row + 2;
